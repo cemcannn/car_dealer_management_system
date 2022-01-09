@@ -20,7 +20,7 @@ def musteri_ekle(musteri:Musteri):
 
 def musteri_sil(benzersiz_kod:int):
     vt=__open()
-    imlec = vt.cursor()v
+    imlec = vt.cursor()
     imlec.execute("DELETE FROM musteriler WHERE Benzersiz_kod = ?",(benzersiz_kod,))
     vt.commit()
     __close(vt)
