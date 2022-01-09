@@ -4,50 +4,57 @@ import os
 
 current_directory = os.getcwd()
 
-def musteri_ekle(musteri:Musteri): 
+def __open():
     veritabanim = sqlite3.connect('{}\\My_Projects\\arac_satis_sistemi_projesi\\src\\arac_satis_sistemi\\database\\veritabanim.sqlite'.format(current_directory))
-    imlec = veritabanim.cursor()
-    imlec.execute("INSERT INTO musteriler VALUES (?,?,?,?,?,?)",(musteri.benzersiz_kod,musteri.tckn,musteri.adi,musteri.soyadi,musteri.adres,musteri.tel))
-    veritabanim.commit()
+    return veritabanim
+
+def __close(veritabanim):
     veritabanim.close()
+
+def musteri_ekle(musteri:Musteri): 
+    vt=__open()
+    imlec = vt.cursor()
+    imlec.execute("INSERT INTO musteriler VALUES (?,?,?,?,?,?)",(musteri.benzersiz_kod,musteri.tckn,musteri.adi,musteri.soyadi,musteri.adres,musteri.tel))
+    vt.commit()
+    __close(vt)
 
 def musteri_sil(benzersiz_kod:int):
-    veritabanim = sqlite3.connect('{}\\My_Projects\\arac_satis_sistemi_projesi\\src\\arac_satis_sistemi\\database\\veritabanim.sqlite'.format(current_directory))
-    imlec = veritabanim.cursor()
+    vt=__open()
+    imlec = vt.cursor()v
     imlec.execute("DELETE FROM musteriler WHERE Benzersiz_kod = ?",(benzersiz_kod,))
-    veritabanim.commit()
-    veritabanim.close()
+    vt.commit()
+    __close(vt)
 
 def musteri_getir_benzersizkod(benzersiz_kod:int):
-    veritabanim = sqlite3.connect('{}\\My_Projects\\arac_satis_sistemi_projesi\\src\\arac_satis_sistemi\\database\\veritabanim.sqlite'.format(current_directory))
-    imlec = veritabanim.cursor()
+    vt=__open()
+    imlec = vt.cursor()
     imlec.execute("SELECT * FROM musteriler WHERE Benzersiz_kod = ?",(benzersiz_kod,))
     musteri = imlec.fetchone()
-    veritabanim.close()                             
+    __close(vt)                             
     return musteri
 
 def musteri_getir_tckn(tckn:int) -> Musteri: 
-    veritabanim = sqlite3.connect('{}\\My_Projects\\arac_satis_sistemi_projesi\\src\\arac_satis_sistemi\\database\\veritabanim.sqlite'.format(current_directory))
-    imlec = veritabanim.cursor()
+    vt=__open()
+    imlec = vt.cursor()
     imlec.execute("SELECT * FROM musteriler WHERE Musteri_TCKN = ?",(tckn,))
     musteri = imlec.fetchone()
-    veritabanim.close()        
+    __close(vt)        
     if tckn != None:
         return musteri
     return None
               
 def musteri_listele() -> list():
-    veritabanim = sqlite3.connect('{}\\My_Projects\\arac_satis_sistemi_projesi\\src\\arac_satis_sistemi\\database\\veritabanim.sqlite'.format(current_directory))
-    imlec = veritabanim.cursor()
+    vt=__open()
+    imlec = vt.cursor()
     sorgu = "SELECT * FROM musteriler"
     imlec.execute(sorgu)
     musteri_listesi = imlec.fetchall()
+    __close(vt)
     return musteri_listesi
 
 def musteri_duzenle(musteri:Musteri):
-    veritabanim = sqlite3.connect('{}\\My_Projects\\arac_satis_sistemi_projesi\\src\\arac_satis_sistemi\\database\\veritabanim.sqlite'.format(current_directory))
-    imlec = veritabanim.cursor()
+    vt=__open()
+    imlec = vt.cursor()
     imlec.execute("UPDATE musteriler SET Musteri_TCKN = ?, Adi = ?, Soyadi = ?, Adres = ?, Telefon = ? WHERE Benzersiz_kod = ?",(musteri.tckn,musteri.adi,musteri.soyadi,musteri.adres,musteri.tel,musteri.benzersiz_kod))
-    veritabanim.commit()
-    veritabanim.close()
-    
+    vt.commit()
+    __close(vt)
